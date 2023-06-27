@@ -631,6 +631,10 @@ class CurlGitHubPackagesDownloadStrategy < CurlDownloadStrategy
   def resolve_url_basename_time_file_size(url, timeout: nil)
     return super if @resolved_basename.blank?
 
+    if (domain = Homebrew::EnvConfig.artifact_domain)
+      url = url.sub(%r{^https?://#{GitHubPackages::URL_DOMAIN}/}o, "#{domain.chomp("/")}/")
+    end
+
     [url, @resolved_basename, nil, nil, false]
   end
 end
